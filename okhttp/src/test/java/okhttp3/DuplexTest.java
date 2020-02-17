@@ -34,6 +34,7 @@ import okhttp3.testing.PlatformRule;
 import okhttp3.tls.HandshakeCertificates;
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.TimeoutException;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -433,7 +434,7 @@ public final class DuplexTest {
     try {
       call.execute();
       fail();
-    } catch (IOException e) {
+    } catch (TimeoutException e) {
       assertThat(e.getMessage()).isEqualTo("timeout");
       assertTrue(call.isCanceled());
     }

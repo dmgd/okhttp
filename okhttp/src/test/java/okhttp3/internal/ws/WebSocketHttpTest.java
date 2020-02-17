@@ -17,7 +17,6 @@ package okhttp3.internal.ws;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
@@ -47,6 +46,7 @@ import okhttp3.testing.PlatformRule;
 import okhttp3.tls.HandshakeCertificates;
 import okio.Buffer;
 import okio.ByteString;
+import okio.TimeoutException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -717,7 +717,7 @@ public final class WebSocketHttpTest {
         .build();
 
     newWebSocket();
-    clientListener.assertFailure(InterruptedIOException.class, "timeout");
+    clientListener.assertFailure(TimeoutException.class, "timeout");
   }
 
   @Test public void callTimeoutDoesNotApplyOnceConnected() throws Exception {

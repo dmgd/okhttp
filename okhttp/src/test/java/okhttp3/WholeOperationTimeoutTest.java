@@ -25,6 +25,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.testing.Flaky;
 import okio.BufferedSink;
+import okio.TimeoutException;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -74,7 +75,7 @@ public final class WholeOperationTimeoutTest {
     try {
       call.execute();
       fail();
-    } catch (IOException e) {
+    } catch (TimeoutException e) {
       assertThat(e.getMessage()).isEqualTo("timeout");
       assertThat(call.isCanceled()).isTrue();
     }
@@ -123,7 +124,7 @@ public final class WholeOperationTimeoutTest {
     try {
       call.execute();
       fail();
-    } catch (IOException e) {
+    } catch (TimeoutException e) {
       assertThat(e.getMessage()).isEqualTo("timeout");
       assertThat(call.isCanceled()).isTrue();
     }
@@ -156,7 +157,7 @@ public final class WholeOperationTimeoutTest {
 
     latch.await();
     assertThat(call.isCanceled()).isTrue();
-    assertThat(exceptionRef.get()).isNotNull();
+    assertThat(exceptionRef.get()).isNotNull().hasMessage("timeout").isInstanceOf(TimeoutException.class);
   }
 
   @Test public void timeoutReadingResponse() throws Exception {
@@ -174,7 +175,7 @@ public final class WholeOperationTimeoutTest {
     try {
       response.body().source().readUtf8();
       fail();
-    } catch (IOException e) {
+    } catch (TimeoutException e) {
       assertThat(e.getMessage()).isEqualTo("timeout");
       assertThat(call.isCanceled()).isTrue();
     }
@@ -252,7 +253,7 @@ public final class WholeOperationTimeoutTest {
     try {
       call.execute();
       fail();
-    } catch (IOException e) {
+    } catch (TimeoutException e) {
       assertThat(e.getMessage()).isEqualTo("timeout");
       assertThat(call.isCanceled()).isTrue();
     }
@@ -276,7 +277,7 @@ public final class WholeOperationTimeoutTest {
     try {
       call.execute();
       fail();
-    } catch (IOException e) {
+    } catch (TimeoutException e) {
       assertThat(e.getMessage()).isEqualTo("timeout");
       assertThat(call.isCanceled()).isTrue();
     }

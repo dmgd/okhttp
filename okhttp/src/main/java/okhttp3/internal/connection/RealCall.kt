@@ -47,6 +47,7 @@ import okhttp3.internal.http.RetryAndFollowUpInterceptor
 import okhttp3.internal.platform.Platform
 import okhttp3.internal.threadName
 import okio.AsyncTimeout
+import okio.TimeoutException
 
 /**
  * Bridge between OkHttp's application and network layers. This class exposes high-level application
@@ -384,7 +385,7 @@ class RealCall(
     if (timeoutEarlyExit) return cause
     if (!timeout.exit()) return cause
 
-    val e = InterruptedIOException("timeout")
+    val e = TimeoutException("timeout")
     if (cause != null) e.initCause(cause)
     @Suppress("UNCHECKED_CAST") // E is either IOException or IOException?
     return e as E
