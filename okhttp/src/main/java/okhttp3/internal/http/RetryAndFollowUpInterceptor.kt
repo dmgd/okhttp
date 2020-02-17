@@ -45,6 +45,7 @@ import okhttp3.internal.http.StatusLine.Companion.HTTP_MISDIRECTED_REQUEST
 import okhttp3.internal.http.StatusLine.Companion.HTTP_PERM_REDIRECT
 import okhttp3.internal.http.StatusLine.Companion.HTTP_TEMP_REDIRECT
 import okhttp3.internal.http2.ConnectionShutdownException
+import okio.TimeoutException
 
 /**
  * This interceptor recovers from failures and follows redirects as necessary. It may throw an
@@ -167,7 +168,7 @@ class RetryAndFollowUpInterceptor(private val client: OkHttpClient) : Intercepto
     // If there was an interruption don't recover, but if there was a timeout connecting to a route
     // we should try the next route (if there is one).
     if (e is InterruptedIOException) {
-      return e is SocketTimeoutException && !requestSendStarted
+      return (e is SocketTimeoutException || e is TimeoutException) && !requestSendStarted
     }
 
     // Look for known client-side or negotiation errors that are unlikely to be fixed by trying
